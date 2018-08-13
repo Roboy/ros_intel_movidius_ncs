@@ -27,6 +27,9 @@
 #include <sensor_msgs/Image.h>
 #include "movidius_ncs_lib/ncs.h"
 #include "movidius_ncs_lib/ncs_manager.h"
+#include "roboy_communication_control/Strings.h"
+
+using namespace std;
 
 namespace movidius_ncs_stream
 {
@@ -47,10 +50,17 @@ private:
   void cbDetect(const sensor_msgs::ImageConstPtr& image);
   void getParameters();
   void init();
+  int personCount = 0;
+  int frameCount = 0;
+  int frameCount2 = 0;
+  int timePerson = 0;
+  int timeObject = 0;
+  bool listeningPerson = false;
+  std::vector<string> detectedObjects;
 
   std::shared_ptr<movidius_ncs_lib::NCSManager> ncs_manager_handle_;
 
-  ros::Publisher pub_;
+  ros::Publisher pub_, pub1_, pub2_, pub3_;
   image_transport::Subscriber sub_;
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
