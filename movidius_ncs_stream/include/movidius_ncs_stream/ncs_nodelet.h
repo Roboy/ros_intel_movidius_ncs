@@ -53,6 +53,7 @@ private:
   int personCount = 0;
   int frameCount = 0;
   int frameCount2 = 0;
+  int frame = 0;
   int timePerson = 0;
   int timeObject = 0;
   bool listeningPerson = false;
