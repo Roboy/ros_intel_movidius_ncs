@@ -90,4 +90,4 @@ private:
 };
 }  // namespace movidius_ncs_stream
 
-#endif  // MOVIDIUS_NCS_STREAM_NCS_NODELET_H
+#endif // MOVIDIUS_NCS_STREAM_NCS_NODELET_H
