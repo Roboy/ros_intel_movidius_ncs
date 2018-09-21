@@ -226,7 +226,7 @@ void NCSImpl::init()
 	pub3_ = nh_.advertise<std_msgs::Bool>("/roboy/cognition/vision/person_listening", 1);
   }
 
-  ncs_manager_handle_->startThreads();
+  //ncs_manager_handle_->startThreads();
 }
 
 void NCSImpl::cbClassify(const sensor_msgs::ImageConstPtr& image_msg)
@@ -291,49 +291,41 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
     obj.object.object_name = item.item.category;
     obj.object.probability = item.item.probability;
 
-    if (item.item.category == "person" && item.item.probability >= 0.8)
-	{
+    if (item.item.category == "person" && item.item.probability >= 0.8){
 	personDetected += 1;
 	frameCount = 0;
 	}
 
 	//wait 30 frames before setting time_person to zero
-	if(frameCount >= 30)
-    {
+	if(frameCount >= 30){
     timePerson = 0;
 	}
 
-	if (timePerson >  10)
-    {
+	if (timePerson >  10){
 	personCount = personDetected;
 	}
 
 	//after detecting a person for 120 consecutive frames, the system interprets it as the person(s) is listening
-    if (timePerson >  120)
-    {
+    if (timePerson >  120){
     listeningPerson = true;
     }
-    else 
-    {
+    else {
     listeningPerson = false;
     }
     //ROS_INFO_STREAM("frameCount " << frameCount);
 	//ROS_INFO_STREAM("timePerson " << timePerson);
 
-	if (item.item.category != "person" && item.item.probability >= 0.8)
-	{
+	if (item.item.category != "person" && item.item.probability >= 0.8){
 	frameCount2 = 0;	
 	}
 
 	//wait 30 frames before setting time_person to zero
-    if(frameCount2 >= 30)
-    {
+    if(frameCount2 >= 30){
     timeObject = 0;
 	}
 
 	//after detecting an object for 200 consecutive frames, the system interprets it as the person(s) is listening
-    if (item.item.category != "person" && item.item.probability >= 0.8 && timeObject >  10)
-    {
+    if (item.item.category != "person" && item.item.probability >= 0.8 && timeObject >  10){
     detectedObjects.push_back(obj.object.object_name);;
     }
     //ROS_INFO_STREAM("frameCount2 " << frameCount2);
@@ -361,14 +353,13 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
   //Publisher for number of detected people
   std_msgs::Int8 msgPersonCount;
   personCount = personCount / 2;
-  ROS_INFO_STREAM("persoooonen " << personCount);
+  //ROS_INFO_STREAM("Number of persons: " << personCount);
   msgPersonCount.data = personCount;
   pub1_.publish(msgPersonCount);
 
   //Publisher for detected objects
   roboy_communication_control::Strings msgObjects;
-  for (auto item :detectedObjects)
-  {
+  for (auto item :detectedObjects){
   msgObjects.names.push_back(item);
   }
   pub2_.publish(msgObjects);
@@ -376,7 +367,7 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
   //Publisher for Bool if person is listening
   std_msgs::Bool msgListening;
   msgListening.data = listeningPerson;
-  ROS_INFO_STREAM("zuhoererrr " << listeningPerson);
+  //ROS_INFO_STREAM("Person listening: " << listeningPerson);
   pub3_.publish(msgListening);
   }
 }
