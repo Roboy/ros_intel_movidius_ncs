@@ -219,7 +219,8 @@ void NCSImpl::init()
   }
   else
   {
-    sub_ = it->subscribe("/camera/rgb/image_raw", 1, &NCSImpl::cbDetect, this);
+    sub_ = it->subscribe("/zed/right/image_raw_color", 1, &NCSImpl::cbDetect, this);
+    ROS_INFO_STREAM("subscribed to camera stream");
     pub_ = nh_.advertise<object_msgs::ObjectsInBoxes>("detected_objects", 1);
     pub1_ = nh_.advertise<std_msgs::Int8>("/roboy/cognition/vision/people_around", 1);
 	pub2_ = nh_.advertise<roboy_communication_control::Strings>("/roboy/cognition/vision/detected_objects", 1);
@@ -238,7 +239,7 @@ void NCSImpl::cbClassify(const sensor_msgs::ImageConstPtr& image_msg)
   }
 
   cv::Mat camera_data = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
-
+  //ROS_INFO_STREAM("classify image cropped! ");
   FUNP_C classification_result_callback = boost::bind(&NCSImpl::cbGetClassificationResult, this, _1, _2);
   ncs_manager_handle_->classifyStream(camera_data, classification_result_callback, image_msg);
 }
@@ -253,8 +254,18 @@ void NCSImpl::cbDetect(const sensor_msgs::ImageConstPtr& image_msg)
 
   cv::Mat camera_data = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
 
+  cv::Rect roi;
+  roi.x = 0;
+  roi.y = 0;
+  roi.width = 1280;
+  roi.height = 720;
+  ROS_INFO_STREAM("detect image cropped! ");
+  cv::Mat cropped = camera_data(roi);
+
   FUNP_D detection_result_callback = boost::bind(&NCSImpl::cbGetDetectionResult, this, _1, _2);
-  ncs_manager_handle_->detectStream(camera_data, detection_result_callback, image_msg);
+  	ncs_manager_handle_->detectStream(cropped, detection_result_callback, image_msg);
+  //FUNP_D detection_result_callback = boost::bind(&NCSImpl::cbGetDetectionResult, this, _1, _2);
+  //ncs_manager_handle_->detectStream(camera_data, detection_result_callback, image_msg);
 }
 
 NCSNodelet::~NCSNodelet()
@@ -349,11 +360,10 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
 
   pub_.publish(objs_in_boxes);
 
-  if ( frame % 10 == 0 ){
+  if ( frame % 2 == 0 ){
   //Publisher for number of detected people
   std_msgs::Int8 msgPersonCount;
-  personCount = personCount / 2;
-  //ROS_INFO_STREAM("Number of persons: " << personCount);
+  ROS_INFO_STREAM("Number of persons: " << personCount);
   msgPersonCount.data = personCount;
   pub1_.publish(msgPersonCount);
 
@@ -362,12 +372,13 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
   for (auto item :detectedObjects){
   msgObjects.names.push_back(item);
   }
+  //ROS_INFO_STREAM("Detected objects: " << detectedObjects);
   pub2_.publish(msgObjects);
 
   //Publisher for Bool if person is listening
   std_msgs::Bool msgListening;
   msgListening.data = listeningPerson;
-  //ROS_INFO_STREAM("Person listening: " << listeningPerson);
+  ROS_INFO_STREAM("Person listening: " << listeningPerson);
   pub3_.publish(msgListening);
   }
 }
