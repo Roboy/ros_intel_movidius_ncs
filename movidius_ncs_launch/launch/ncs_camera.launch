@@ -45,7 +45,7 @@ limitations under the License.
 
   <!-- camera related parameters -->
   <arg name="camera" default="others" />
-  <arg name="input_topic" value="/usb_cam/image_raw" if="$(eval camera == 'usb')" />
+  <arg name="input_topic" value="/zed/right/image_raw_color/compressed" if="$(eval camera == 'usb')" />
   <arg name="input_topic" value="/camera/color/image_raw" if="$(eval camera == 'realsense')" />
   <arg name="input_topic" default="/camera/rgb/image_raw" if="$(eval camera == 'others')" />
 

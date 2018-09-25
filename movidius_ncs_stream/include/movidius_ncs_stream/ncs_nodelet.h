@@ -47,7 +47,7 @@ public:
 
 private:
   void cbClassify(const sensor_msgs::ImageConstPtr& image);
-  void cbDetect(const sensor_msgs::ImageConstPtr& image);
+  void cbDetect(const sensor_msgs::CompressedImageConstPtr& image);
   void getParameters();
   void init();
   int personCount = 0;
@@ -62,7 +62,7 @@ private:
   std::shared_ptr<movidius_ncs_lib::NCSManager> ncs_manager_handle_;
 
   ros::Publisher pub_, pub1_, pub2_, pub3_;
-  image_transport::Subscriber sub_;
+  ros::Subscriber sub_;
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
 

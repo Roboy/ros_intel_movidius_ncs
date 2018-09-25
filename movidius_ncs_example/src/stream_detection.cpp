@@ -100,7 +100,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "movidius_ncs_example_stream");
   ros::NodeHandle nh;
 
-  message_filters::Subscriber<sensor_msgs::Image> camSub(nh, "/camera/color/image_raw", 1);
+  message_filters::Subscriber<sensor_msgs::Image> camSub(nh, "/zed/right/image_raw_color", 1);
   message_filters::Subscriber<object_msgs::ObjectsInBoxes> objSub(nh, "/movidius_ncs_nodelet/detected_objects", 1);
   message_filters::TimeSynchronizer<sensor_msgs::Image, object_msgs::ObjectsInBoxes> sync(camSub, objSub, 60);
   sync.registerCallback(boost::bind(&syncCb, _1, _2));

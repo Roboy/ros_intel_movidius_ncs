@@ -214,12 +214,12 @@ void NCSImpl::init()
       !cnn_type_.compare("inception_v2") || !cnn_type_.compare("inception_v3") || !cnn_type_.compare("inception_v4") ||
       !cnn_type_.compare("mobilenet") || !cnn_type_.compare("squeezenet"))
   {
-    sub_ = it->subscribe("/camera/rgb/image_raw", 1, &NCSImpl::cbClassify, this);
+    sub_ = nh_.subscribe("/camera/rgb/image_raw", 1, &NCSImpl::cbClassify, this);
     pub_ = nh_.advertise<object_msgs::Objects>("classified_objects", 1);
   }
   else
   {
-    sub_ = it->subscribe("/zed/right/image_raw_color", 1, &NCSImpl::cbDetect, this);
+    sub_ = nh_.subscribe("/zed/right/image_raw_color/compressed", 1, &NCSImpl::cbDetect, this);
     ROS_INFO_STREAM("subscribed to camera stream");
     pub_ = nh_.advertise<object_msgs::ObjectsInBoxes>("detected_objects", 1);
     pub1_ = nh_.advertise<std_msgs::Int8>("/roboy/cognition/vision/people_around", 1);
@@ -239,12 +239,12 @@ void NCSImpl::cbClassify(const sensor_msgs::ImageConstPtr& image_msg)
   }
 
   cv::Mat camera_data = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
-  //ROS_INFO_STREAM("classify image cropped! ");
+  ROS_INFO_STREAM("classify image cropped! ");
   FUNP_C classification_result_callback = boost::bind(&NCSImpl::cbGetClassificationResult, this, _1, _2);
   ncs_manager_handle_->classifyStream(camera_data, classification_result_callback, image_msg);
 }
 
-void NCSImpl::cbDetect(const sensor_msgs::ImageConstPtr& image_msg)
+void NCSImpl::cbDetect(const sensor_msgs::CompressedImageConstPtr& image_msg)
 {
   if (pub_.getNumSubscribers() == 0)
   {
@@ -312,12 +312,12 @@ void NCSImpl::cbGetDetectionResult(movidius_ncs_lib::DetectionResultPtr result, 
     timePerson = 0;
 	}
 
-	if (timePerson >  10){
+	if (timePerson >  5){
 	personCount = personDetected;
 	}
 
 	//after detecting a person for 120 consecutive frames, the system interprets it as the person(s) is listening
-    if (timePerson >  120){
+    if (timePerson >  20){
     listeningPerson = true;
     }
     else {

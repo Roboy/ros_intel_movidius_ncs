@@ -26,7 +26,7 @@
 #include "boost/function.hpp"
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
-#include <sensor_msgs/Image.h>
+#include <sensor_msgs/CompressedImage.h>
 #include "movidius_ncs_lib/device.h"
 #include "movidius_ncs_lib/ncs.h"
 
@@ -55,7 +55,7 @@ public:
   void classifyStream(const cv::Mat& image, FUNP_C cbGetClassificationResult,
                       const sensor_msgs::ImageConstPtr& image_msg);
   void detectStream(const cv::Mat& image, FUNP_D cbGetDetectionResult,
-                    const sensor_msgs::ImageConstPtr& image_msg);
+                    const sensor_msgs::CompressedImageConstPtr& image_msg);
   std::vector<ClassificationResultPtr> classifyImage(const std::vector<std::string>& images);
   std::vector<DetectionResultPtr> detectImage(const std::vector<std::string>& images);
 

@@ -236,7 +236,7 @@ void NCSManager::classifyStream(const cv::Mat& image, FUNP_C cbGetClassification
 }
 
 void NCSManager::detectStream(const cv::Mat& image, FUNP_D cbGetDetectionResult,
-                              const sensor_msgs::ImageConstPtr& image_msg)
+                              const sensor_msgs::CompressedImageConstPtr& image_msg)
 {
   p_d_ = cbGetDetectionResult;
 
