@@ -1,5 +1,5 @@
-# QUICK README ros_intel_movidius_ncs for ROBOY usage
 ### For official ros_intel_movidius_ncs README [see below](#Official-ros_intel_movidius_ncs-README)
+# QUICK README ros_intel_movidius_ncs for ROBOY usage
 
 ## 1 Prequisites and Setup
 * An x86_64 computer running Ubuntu 16.04
