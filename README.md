@@ -1,4 +1,4 @@
-### For official ros_intel_movidius_ncs README [see below](#Official-ros_intel_movidius_ncs-README)
+### For official ros_intel_movidius_ncs README [see below](#official-ros_intel_movidius_ncs-README)
 # QUICK README ros_intel_movidius_ncs for ROBOY usage
 
 ## 1 Prequisites and Setup
