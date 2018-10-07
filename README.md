@@ -1,4 +1,52 @@
-# ros_intel_movidius_ncs
+# QUICK README ros_intel_movidius_ncs for ROBOY usage
+### See below for official ros_intel_movidius_ncs README
+
+## 1 Prequisites and Setup
+* An x86_64 computer running Ubuntu 16.04
+* ROS Kinetic
+* At least 1 Movidius Neural Compute Stick ([NCS](https://developer.movidius.com/))
+* Install NCSDK [v1.12.00](https://github.com/movidius/ncsdk/releases) ([github](https://github.com/movidius/ncsdk))
+* Install NC APP Zoo ([github](https://github.com/movidius/ncappzoo))
+* NCSDK should be installed in ```/opt/movidius``` by default. Create a symbol link in ```/opt/movidius``` to NC APP Zoo.
+```Shell
+sudo ln -s <your-workspace>/ncappzoo /opt/movidius/ncappzoo
+```
+After that, make sure you can find graph data in ```/opt/movidius/ncappzoo/caffe``` or ```/opt/movidius/ncappzoo/tensorflow``` and image data in ```/opt/movidius/ncappzoo/data/images```
+
+## 2 Building and Installation
+```Shell
+# Building
+cd ~/catkin_ws/src
+git clone https://github.com/intel/object_msgs
+git clone https://github.com/intel/ros_intel_movidius_ncs.git
+cd ros_intel_movidius_ncs
+git checkout master
+cd ~/catkin_ws
+catkin_make
+# Installation
+catkin_make install
+source install/setup.bash
+# Copy label files from this project to the installation location of NCSDK
+cp ~/catkin_ws/src/ros_intel_movidius_ncs/data/labels/* /opt/movidius/ncappzoo/data/ilsvrc12/
+```
+
+## 3 Run vision streaming nodelet
+Compile NCS graph.
+```Shell
+cd /opt/movidius/ncappzoo/caffe/SSD_MobileNet
+make
+```
+Launch video streaming nodelet.
+```Shell
+roslaunch movidius_ncs_launch ncs_camera.launch cnn_type:=mobilenetssd camera:=usb
+```
+Launch image viewer to show the classification result on another console.
+```Shell
+roslaunch movidius_ncs_launch ncs_stream_detection_example.launch camera_topic:="/usb_cam/image_raw"
+```
+
+
+# Official ros_intel_movidius_ncs README
 
 ## 1 Introduction
 The Movidius™ Neural Compute Stick ([NCS](https://developer.movidius.com/)) is a tiny fanless deep learning device that you can use to learn AI programming at the edge. NCS is powered by the same low power high performance Movidius™ Vision Processing Unit ([VPU](https://www.movidius.com/solutions/vision-processing-unit)) that can be found in millions of smart security cameras, gesture controlled drones, industrial machine vision equipment, and more.
