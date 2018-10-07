@@ -1,5 +1,5 @@
 # QUICK README ros_intel_movidius_ncs for ROBOY usage
-### See below for official ros_intel_movidius_ncs README
+### See for official ros_intel_movidius_ncs README [below](#Official ros_intel_movidius_ncs README)
 
 ## 1 Prequisites and Setup
 * An x86_64 computer running Ubuntu 16.04
@@ -44,6 +44,9 @@ Launch image viewer to show the classification result on another console.
 ```Shell
 roslaunch movidius_ncs_launch ncs_stream_detection_example.launch camera_topic:="/usb_cam/image_raw"
 ```
+
+
+
 
 
 # Official ros_intel_movidius_ncs README
