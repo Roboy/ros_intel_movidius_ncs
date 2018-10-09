@@ -42,7 +42,7 @@ roslaunch movidius_ncs_launch ncs_camera.launch cnn_type:=mobilenetssd camera:=u
 ```
 Launch image viewer to show the classification result on another console.
 ```Shell
-roslaunch movidius_ncs_launch ncs_stream_detection_example.launch camera_topic:="/usb_cam/image_raw"
+roslaunch movidius_ncs_launch ncs_stream_detection_example.launch camera_topic:="/zed/left/image_raw_color/compressed"
 ```
 
 
